@@ -1,10 +1,10 @@
 <?php
     //USUARIO DE BASE DE DATOS 
-    $sqlUser= 'root'; 
+    $sqlUser= 'importadoradp'; 
     //CONTRASEÑA DE BASE DE DATOS 
-    $sqlPass= 'root'; 
+    $sqlPass= 'malicedix'; 
     //UBICACION DE BASE DE DATOS 
-    $sqlHost= 'localhost'; 
+    $sqlHost= 'db4free.net'; 
     //NOMBRE DE BASE DE DATOS 
-    $sqlBase= 'condones'; 
+    $sqlBase= 'importadoradp'; 
 ?>
