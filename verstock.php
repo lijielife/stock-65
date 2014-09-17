@@ -47,6 +47,19 @@
             });
         });
     </script>
+
+    <script type="text/javascript">
+    $(document).ready(function(){
+      $(".btn-info").on('click', function() {
+        var busqueda = $("td.id").text();
+
+        alert(busqueda);
+        // Returns successful data submission message when the entered information is stored in database.
+       
+      });
+    });
+
+  </script>
 </head>
 <body>
 
@@ -91,8 +104,9 @@
                   <td>'.strtoupper($row['reservado']).'</td>
                   <td>'.strtoupper($row['vendido']).'</td>
                   <td>'.strtoupper($row['disponible']).'</td>
+                  <td class="id" style="display:none">'.$row['id'].'</td>
                   <td class="text-center">
-                    <a class="btn btn-info btn-xs" href="#editarVenta">
+                    <a class="btn btn-info btn-xs">
                       <span class="glyphicon glyphicon-edit"></span> Agregar Stock</a>
                     <!-- <a class="btn btn-success btn-xs" href="#vender">
                       <span class="glyphicon glyphicon-thumbs-up"></span> Vendido</a> -->
