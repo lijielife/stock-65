@@ -36,6 +36,7 @@
 
     <script src="js/bootstrap.min.js"></script>
     <script src="js/jquery-1.11.1.min.js"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {   
             var sideslider = $('[data-toggle=collapse-side]');
@@ -51,14 +52,57 @@
     <script type="text/javascript">
     $(document).ready(function(){
       $(".btn-info").on('click', function() {
-        var busqueda = $("td.id").text();
-
-        alert(busqueda);
+        //var busqueda = $("td.id").text();
+        var id = this.id
+        var agregar = $('#id_'+id).val()
         // Returns successful data submission message when the entered information is stored in database.
-       
+        if (agregar == ''){
+          alert('Debe elegir un monto para agregar');
+        }
+        else{
+          // Codigo AJAX para realizar la busqueda asincronica con la base de datos.
+          $.ajax({
+          type: "POST",
+          url: "agregar.php",
+          data: {agregar:agregar,id:id},
+          cache: false,
+          success: function(result){
+            if (result == ''){
+              window.location.reload();
+            }
+            else{
+              alert(result);
+            }
+            //  $("#lista").html(result);
+            
+          }
+        });
+        }
       });
     });
-
+  </script>
+  <script type="text/javascript">
+    $(function() {
+    $('.confirm').on('click', function() {
+        var id = this.id
+        if (window.confirm("¿Estas seguro que deseas eliminarlo?")){
+          $.ajax({
+          type: "POST",
+          url: "eliminar.php",
+          data: {id:id},
+          cache: false,
+          success: function(result){
+            if (result == ''){
+              window.location.reload();
+            }
+            else{
+              alert(result);
+            }
+          }
+        });
+        }
+    });
+});
   </script>
 </head>
 <body>
@@ -86,31 +130,33 @@
         <table class="table table-striped custab">
           <thead>
                 <tr>
-                    <th>Marca</th>
-                    <th>Producto</th>
-                    <th>Importado</th>
-                    <th>Reservado</th>
-                    <th>Vendido</th>
-                    <th>Disponible</th>
-                    <th class="text-center">Action</th>
+                    <th class="text-center">Marca</th>
+                    <th class="text-center">Producto</th>
+                    <th class="text-center">Importado</th>
+                    <th class="text-center">Reservado</th>
+                    <th class="text-center">Vendido</th>
+                    <th class="text-center">Disponible</th>
+                    <th class="text-center">Agregar Stock</th>
+                    <th class="text-center">Eliminar</th>
                 </tr>
           </thead>
           <?php 
               while($row = mysql_fetch_array($result)){
               echo'<tr>
-                  <td>'.strtoupper($row['marca']).'</td>
-                  <td>'.strtoupper($row['nombre']).'</td>
-                  <td>'.strtoupper($row['total']).'</td>
-                  <td>'.strtoupper($row['reservado']).'</td>
-                  <td>'.strtoupper($row['vendido']).'</td>
-                  <td>'.strtoupper($row['disponible']).'</td>
-                  <td class="id" style="display:none">'.$row['id'].'</td>
+                  <td class="text-center">'.strtoupper($row['marca']).'</td>
+                  <td class="text-center">'.strtoupper($row['nombre']).'</td>
+                  <td class="text-center">'.strtoupper($row['total']).'</td>
+                  <td class="text-center">'.strtoupper($row['reservado']).'</td>
+                  <td class="text-center">'.strtoupper($row['vendido']).'</td>
+                  <td class="text-center">'.strtoupper($row['disponible']).'</td>
+                  <td class="id text-center" style="display:none">'.$row['id'].'</td>
                   <td class="text-center">
-                    <a class="btn btn-info btn-xs">
+                    <input type="text" id="id_'.$row['id'].'" class="asdf" style="width: 40px; padding: 0;">
+                    <a class="btn btn-info btn-xs" id="'.$row['id'].'">
                       <span class="glyphicon glyphicon-edit"></span> Agregar Stock</a>
-                    <!-- <a class="btn btn-success btn-xs" href="#vender">
-                      <span class="glyphicon glyphicon-thumbs-up"></span> Vendido</a> -->
-                    <a href="#cancelarVenta" class="btn btn-danger btn-xs">
+                  </td>
+                  <td class="text-center">
+                    <a class="btn btn-danger btn-xs confirm" id="'.$row['id'].'" >
                       <span class="glyphicon glyphicon-remove"></span> Eliminar Producto</a> 
                   </td>
               </tr>

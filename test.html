@@ -1,0 +1,304 @@
+<div class="container">
+	<div class="row">
+        <div class="control-group" id="fields">
+            <label class="control-label" for="field1">Nice Multiple Form Fields</label>
+            <div class="controls"> 
+                <form role="form" autocomplete="off">
+                    <div class="entry input-group col-xs-3">
+                        <input class="form-control" name="fields[]" type="text" placeholder="Type something" />
+                    	<span class="input-group-btn">
+                            <button class="btn btn-success btn-add" type="button">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            <br>
+            <small>Press <span class="glyphicon glyphicon-plus gs"></span> to add another form field :)</small>
+            </div>
+        </div>
+	</div>
+</div><?php 
+
+    header('Access-Control-Allow-Origin: *');
+    ob_start();
+    error_reporting(E_ALL); 
+    ini_set('display_errors', 'on');
+    header('Content-Type: text/html; charset=UTF-8');  
+    session_start(); 
+
+?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Crear Venta</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="shortcut icon" type="image/x-icon" href="img/ico.png" />
+    <!-- Latest compiled and minified CSS -->
+    
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/nav.css">
+    <link rel="stylesheet" href="css/crearventa.css">
+    <link rel="stylesheet" href="css/modal.css">
+
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {   
+            var sideslider = $('[data-toggle=collapse-side]');
+            var sel = sideslider.attr('data-target');
+            var sel2 = sideslider.attr('data-target-2');
+            sideslider.click(function(event){
+                $(sel).toggleClass('in');
+                $(sel2).toggleClass('out');
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        /* 
+    Text fields 
+*/
+$(function(){
+    $(document).on('focus', 'div.form-group-options div.input-group-option:last-child input', function(){
+        var sInputGroupHtml = $(this).parent().html();
+        var sInputGroupClasses = $(this).parent().attr('class');
+        $(this).parent().parent().append('<div class="'+sInputGroupClasses+'">'+sInputGroupHtml+'</div>');
+    });
+    
+    $(document).on('click', 'div.form-group-options .input-group-addon-remove', function(){
+        $(this).parent().remove();
+    });
+});
+
+/* 
+    Selects 
+*/
+$(function(){
+        
+    var values = new Array();
+    
+    $(document).on('change', '.form-group-multiple-selects .input-group-multiple-select:last-child select', function(){
+        
+        var selectsLength = $('.form-group-multiple-selects .input-group-multiple-select select').length;
+        var optionsLength = ($(this).find('option').length)-1;
+        
+        if(selectsLength < optionsLength){
+            var sInputGroupHtml = $(this).parent().html();
+            var sInputGroupClasses = $(this).parent().attr('class');
+            $(this).parent().parent().append('<div class="'+sInputGroupClasses+'">'+sInputGroupHtml+'</div>');  
+        }
+        
+        updateValues();
+        
+    });
+    
+    $(document).on('change', '.form-group-multiple-selects .input-group-multiple-select:not(:last-child) select', function(){
+        
+        updateValues();
+        
+    });
+    
+    $(document).on('click', '.input-group-addon-remove', function(){
+        $(this).parent().remove();
+        updateValues();
+    });
+    
+    function updateValues()
+    {
+        values = new Array();
+        $('.form-group-multiple-selects .input-group-multiple-select select').each(function(){
+            var value = $(this).val();
+            if(value != 0 && value != ""){
+                values.push(value);
+            }
+        });
+        
+        $('.form-group-multiple-selects .input-group-multiple-select select').find('option').each(function(){
+            var optionValue = $(this).val();
+            var selectValue = $(this).parent().val();
+            if(in_array(optionValue,values)!= -1 && selectValue != optionValue)
+            {
+                $(this).attr('disabled', 'disabled');
+            }
+            else
+            {
+                $(this).removeAttr('disabled');
+            }
+        });
+    }
+    
+    function in_array(needle, haystack){
+        var found = 0;
+        for (var i=0, length=haystack.length;i<length;i++) {
+            if (haystack[i] == needle) return i;
+            found++;
+        }
+        return -1;
+    }
+});
+    </script>
+</head>
+<body>
+
+<div id="wrap" class="text-center">
+
+<header role="banner" class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container">
+        <div class="navbar-header">
+          <button data-toggle="collapse-side" data-target=".side-collapse" data-target-2=".side-collapse-container" type="button" class="navbar-toggle pull-left"><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button>
+        </div>
+        <div class="navbar-inverse side-collapse in">
+          <nav role="navigation" class="navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li><a href="crearventa.php">Crear Venta</a></li>
+              <li><a href="agregarproducto.php">Agregar Producto</a></li>
+              <li><a href="verstock.php">Ver Stock</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+   <div class="container">
+        <div class="row col-md-12 custyle">
+            <table class="table table-striped custab">
+                <thead>
+                    <a href="#" class="btn btn-primary btn-xs pull-right" data-toggle="modal" data-target="#myModal"><b>+</b> Crear Venta</a>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Fecha</th>
+                            <th>Lugar</th>
+                            <th>Hora</th>
+                            <th>Telefono</th>
+                            <th>Comentario</th>
+                            <th>Productos</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                </thead>
+                        <tr>
+                            <td>1</td>
+                            <td>Diego Muñoz</td>
+                            <td>Martes 17</td>
+                            <td>Metro Ñuble</td>
+                            <td>17:00</td>
+                            <td>89863731</td>
+                            <td>asdf</td>
+                            <td>
+                                Lifestyles Tuxedo: 6 <br>
+                                Lifestyles Ribbed Pleasure: 7
+
+                            </td>
+                            <td class="text-center">
+                                <a class='btn btn-info btn-xs' href="editarventa.php">
+                                    <span class="glyphicon glyphicon-edit"></span> Editar</a>
+                                <a class='btn btn-success btn-xs' href="venta.php">
+                                    <span class="glyphicon glyphicon-thumbs-up"></span> Vendido</a> 
+                                <a href="cancelarventa.php" class="btn btn-danger btn-xs">
+                                    <span class="glyphicon glyphicon-remove"></span> Cancelado</a>
+                            </td>
+                        </tr>
+                        
+            </table>
+        </div>
+    </div>
+
+<!-- MODAL CREAR VENTA -->
+  <!-- Button trigger modal -->
+
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="container" style="margin-top:60px;">
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <h1>Crear nueva venta !</h1>
+        <hr>
+        <input type="hidden" name="count" value="1" />
+        <a href="#" class="btn btn-primary btn-lg" style="margin-bottom: 30px;"><b>Crear Venta</b></a> 
+        <div class="control-group" id="fields">
+            <div class="controls" id="profs">
+                <div class="row">
+        <div class="col-sm-12">
+        </div>
+        <!-- panel preview -->
+        <div class="col-sm-5">
+            <div class="panel panel-default">
+                <div class="panel-body form-horizontal payment-form">
+                    <div class="form-group">
+                        <label for="concept" class="col-sm-3 control-label">Nombre</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="concept" name="concept">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-sm-3 control-label">Lugar</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="description" name="description">
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label for="amount" class="col-sm-3 control-label">Fecha</label>
+                        <div class="col-sm-9">
+                            <input type="date" class="form-control" id="amount" name="amount">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="hora" class="col-sm-3 control-label">Hora</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="date" name="date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tel" class="col-sm-3 control-label">Telefono</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="date" name="date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="date" class="col-sm-3 control-label">Comentarios</label>
+                        <div class="col-sm-9">
+                            <textarea class="form-control" rows="3" id="comentarios" name="comentarios"></textarea>
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <div class="col-sm-12 text-right">
+                        </div>
+                    </div>
+                </div>
+            </div>            
+        </div> <!-- / panel preview -->
+        <div class="col-sm-7">
+            <h3>Selects</h3>
+    <div class="row">
+        <div class="form-group form-group-multiple-selects col-xs-11 col-sm-8 col-md-4">
+            <div class="input-group input-group-multiple-select col-xs-12">
+                <select class="form-control" name="values[]">
+                    <option value="">Select one</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                    <option value="4">Option 4</option>
+                </select>
+                <span class="input-group-addon input-group-addon-remove">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </span>
+            </div>
+        </div>
+    </div>
+        </div>
+    </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+</div>
+</body>
+</html> 

@@ -131,19 +131,8 @@
         </div>
       </div>
     </header>
-    <?php 
-        if ($_SESSION['error'] != ""){
-            echo '
-            <div class="row col-xs-8 col-xs-offset-2">
-                <div class="alert alert-warning alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        '.$_SESSION['error'].'
-                </div>
-            </div>
-            ';
-        }
-     ?>
-   <div class="container">
+
+  <div class="container">
         <div class="row col-md-12 custyle">
             <table class="table table-striped custab">
                 <thead>
@@ -162,7 +151,10 @@
                 </thead>
                 <?php 
                     //se extraen la informacion de todas la ventas en el sistema pendientes
-                    $sqlSyntax= 'SELECT * FROM ventas ORDER BY fecha ASC';
+                    $sqlSyntax= 'SELECT id_venta, id_producto, cantidad, cliente, telefono, lugar, fecha, hora, comentarios, reservado, marca, nombre 
+                                 FROM desc_venta 
+                                 INNER JOIN ventas ON desc_venta.id_venta = ventas.id_ventas
+                                 INNER JOIN productos on desc_venta.id_producto = productos.id';
 
                     //por cada id, se extraen 
                     require_once 'mysqlConnection.php'; //Archivo para realizar las conexiones.     
