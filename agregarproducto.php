@@ -22,7 +22,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin - Ver Stock</title>
+    <title>Admin - Agregar Producto</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="shortcut icon" type="image/x-icon" href="img/ico.png" />
@@ -46,6 +46,34 @@
                 $(sel2).toggleClass('out');
             });
         });
+    </script>
+    <script type="text/javascript">
+      $(function() {
+      $('.agregar').on('click', function() {
+          var id = this.id
+          var marca = $("#marca").val();
+          var producto = $("#producto").val();
+          var descripcion = $("#descripcion").val();
+          var cantidad = $("#cantidad").val();
+          var imagen = $("#imagen").val();
+          if (window.confirm("¿Estas seguro que deseas agregar un producto?")){
+            $.ajax({
+            type: "POST",
+            url: "agregar_producto.php",
+            data: {marca:marca,producto:producto,descripcion:descripcion,cantidad:cantidad,imagen:imagen},
+            cache: false,
+            success: function(result){
+              if (result == ''){
+                window.location.reload();
+              }
+              else{
+                alert(result);
+              }
+            }
+          });
+          }
+      });
+});
     </script>
 </head>
 <body>
@@ -118,7 +146,7 @@
             <!-- Form actions -->
             <div class="form-group">
               <div class="col-md-12 text-right">
-                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                <button type="submit" class="btn btn-primary btn-lg agregar">Submit</button>
               </div>
             </div>
           </fieldset>

@@ -110,28 +110,51 @@
             }
         });
     </script>
-      <script type="text/javascript">
-            $(function() {
-            $('.btn-cancelar-venta').on('click', function() {
-                var id = this.id
-                if (window.confirm("¿Estas seguro que deseas eliminar la venta?")){
-                  $.ajax({
-                  type: "POST",
-                  url: "cancelarventa.php",
-                  data: {id:id},
-                  cache: false,
-                  success: function(result){
-                    if (result == ''){
-                      window.location.reload();
-                    }
-                    else{
-                      alert(result);
-                    }
-                  }
-                });
+  <script type="text/javascript">
+        $(function() {
+        $('.btn-cancelar-venta').on('click', function() {
+            var id = this.id
+            if (window.confirm("¿Estas seguro que deseas eliminar la venta?")){
+              $.ajax({
+              type: "POST",
+              url: "cancelarventa.php",
+              data: {id:id},
+              cache: false,
+              success: function(result){
+                if (result == ''){
+                  window.location.reload();
                 }
+                else{
+                  alert(result);
+                }
+              }
             });
+            }
         });
+    });
+  </script>
+    <script type="text/javascript">
+        $(function() {
+        $('.btn-vender').on('click', function() {
+            var id = this.id
+            if (window.confirm("¿Estas seguro finalizar la venta?")){
+              $.ajax({
+              type: "POST",
+              url: "finalizarventa.php",
+              data: {id:id},
+              cache: false,
+              success: function(result){
+                if (result == ''){
+                  window.location.reload();
+                }
+                else{
+                  alert(result);
+                }
+              }
+            });
+            }
+        });
+    });
   </script>
 </head>
 <body>
@@ -216,7 +239,7 @@
                                 <td class="">
                                     <a class="btn btn-info btn-xs" href="editarventa.php">
                                         <span class="glyphicon glyphicon-edit"></span> Editar</a>
-                                    <a class="btn btn-success btn-xs" href="venta.php">
+                                    <a id="'.$idventas.'" class="btn btn-success btn-xs btn-vender">
                                         <span class="glyphicon glyphicon-thumbs-up"></span> Vendido</a> 
                                     <a id="'.$idventas.'" class="btn btn-danger btn-xs btn-cancelar-venta">
                                         <span class="glyphicon glyphicon-remove"></span> Cancelado</a>

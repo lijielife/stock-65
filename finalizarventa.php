@@ -20,7 +20,7 @@
     if ($result == FALSE) { die(@mysql_error()); }
 
     while($row = mysql_fetch_array($result)){ 
-    	$sqlSyntax1 = 'UPDATE productos SET reservado=reservado-'.$row['cantidad'].' WHERE id='.$row['id_producto'];
+    	$sqlSyntax1 = 'UPDATE productos SET vendido=vendido+'.$row['cantidad'].', reservado=reservado-'.$row['cantidad'].' WHERE id='.$row['id_producto'];
         $result1 = @mysql_query($sqlSyntax1);
         if ($result1 == FALSE) { die(@mysql_error()); }
     }              
