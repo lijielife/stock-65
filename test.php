@@ -3,7 +3,7 @@
     header('Access-Control-Allow-Origin: *');
     ob_start();
     error_reporting(E_ALL); 
-    ini_set('display_errors', 'on');
+    ini_set('display_errors', 'off');
     header('Content-Type: text/html; charset=UTF-8');  
     session_start(); 
 ?>
@@ -150,65 +150,58 @@
                         </tr>
                 </thead>
                 <?php 
-                    //se extraen la informacion de todas la ventas en el sistema pendientes
-                    $sqlSyntax= 'SELECT id_venta, id_producto, cantidad, cliente, telefono, lugar, fecha, hora, comentarios, reservado, marca, nombre 
-                                 FROM desc_venta 
-                                 INNER JOIN ventas ON desc_venta.id_venta = ventas.id_ventas
-                                 INNER JOIN productos on desc_venta.id_producto = productos.id';
-
-                    //por cada id, se extraen 
-                    require_once 'mysqlConnection.php'; //Archivo para realizar las conexiones.     
                     mysql_set_charset('utf8');
-                    $result= @mysql_query($sqlSyntax);
+                    //seleccionar todas las ventas del sistema
+                    $idventas = 'SELECT id_ventas FROM ventas';
+                    require_once 'mysqlConnection.php'; //Archivo para realizar las conexiones.     
+                    $result= @mysql_query($idventas);
                     if ($result == FALSE) { die(@mysql_error()); }
-
                     while($row = mysql_fetch_array($result)){
-                        echo '
-                            <tr>
-                            <td style="display: none;">'.$row['id_ventas'].'</td>
-                            <td>'.$row['cliente'].'</td>
-                            <td>'.$row['fecha'].'</td>
-                            <td>'.$row['lugar'].'</td>
-                            <td>'.$row['hora'].'</td>
-                            <td>'.$row['telefono'].'</td>
-                            <td>'.$row['comentarios'].'</td>
-                            <td>
-                        ';
-                        $id_ventas = $row['id_ventas'];
-                        //echo $id_ventas;
-                        $sqlSyntax2= 'SELECT id_producto,cantidad FROM desc_venta WHERE id_venta='.$id_ventas;
+                        $count = 0;                  
+                        $productos = 'SELECT id_ventas, id_producto, cantidad, cliente, telefono, lugar, fecha, hora, comentarios, marca, nombre
+                        FROM desc_venta
+                        INNER JOIN ventas ON desc_venta.id_venta = ventas.id_ventas
+                        INNER JOIN productos ON desc_venta.id_producto = productos.id
+                        WHERE ventas.id_ventas='.$row['id_ventas'].' 
+                        ORDER BY id_ventas';
                         require_once 'mysqlConnection.php'; //Archivo para realizar las conexiones.     
-                        mysql_set_charset('utf8');
-                        $result2= @mysql_query($sqlSyntax2);
+                        $result2= @mysql_query($productos);
                         if ($result2 == FALSE) { die(@mysql_error()); }
-                        while($row2 = mysql_fetch_array($result2)){
-                            $id_producto = $row2['id_producto'];
-                            $sqlSyntax3= 'SELECT marca, nombre FROM productos WHERE id='.$id_producto;
-                            require_once 'mysqlConnection.php'; //Archivo para realizar las conexiones.     
-                            mysql_set_charset('utf8');
-                            $result3= @mysql_query($sqlSyntax3);
-                            if ($result3 == FALSE) { die(@mysql_error()); }
-                            $row3 = mysql_fetch_array($result3);
-                            if(strtoupper($row3['marca']) == 'LIFESTYLES'){
-                                $row3['marca'] = "LF";
+                        while($row2 = mysql_fetch_array($result2)){  
+                            if (strtoupper($row2['marca']) == "LIFESTYLES"){
+                                $row2['marca'] = "[LF]";
+                            }                
+                            if ($count == 0){
+                                $count = 1;
+                                echo '
+                                    <tr>
+                                    <td style="display: none;">'.$row2['id_ventas'].'</td>
+                                    <td style="text-align: left">'.strtoupper($row2['cliente']).'</td>
+                                    <td style="text-align: left">'.$row2['fecha'].'</td>
+                                    <td style="text-align: left">'.$row2['lugar'].'</td>
+                                    <td style="text-align: left">'.$row2['hora'].'</td>
+                                    <td style="text-align: left">'.$row2['telefono'].'</td>
+                                    <td style="text-align: left">'.$row2['comentarios'].'</td>
+                                    <td style="text-align: left"><strong>'.strtoupper($row2['marca']).'</strong> '.strtoupper($row2['nombre']).': <strong>'.$row2['cantidad'].'</strong><br>';
                             }
-                            if($row3['marca'] != "" and $row3['nombre'] != ""){
-                                echo strtoupper($row3['marca']).' '.strtoupper($row3['nombre']).' '.$row2['cantidad'];
-                                echo '<br>';
+                            else{
+                                echo '<strong>'.strtoupper($row2['marca']).'</strong> '.strtoupper($row2['nombre']).': <strong>'.$row2['cantidad'].'</strong><br>';
                             }
                         }
-                        echo '</td>
+                        echo '</td>';
+                         echo '</td>
                                 <td class="">
-                                        <a class="btn btn-info btn-xs" href="editarventa.php">
-                                            <span class="glyphicon glyphicon-edit"></span> Editar</a>
-                                        <a class="btn btn-success btn-xs" href="venta.php">
-                                            <span class="glyphicon glyphicon-thumbs-up"></span> Vendido</a> 
-                                        <a href="cancelarventa.php" class="btn btn-danger btn-xs">
-                                            <span class="glyphicon glyphicon-remove"></span> Cancelado</a>
-                                    </td>
-                                </tr>  
+                                    <a class="btn btn-info btn-xs" href="editarventa.php">
+                                        <span class="glyphicon glyphicon-edit"></span> Editar</a>
+                                    <a class="btn btn-success btn-xs" href="venta.php">
+                                        <span class="glyphicon glyphicon-thumbs-up"></span> Vendido</a> 
+                                    <a href="cancelarventa.php" class="btn btn-danger btn-xs">
+                                        <span class="glyphicon glyphicon-remove"></span> Cancelado</a>
+                                </td>
+                            </tr>  
                         ';
                     }
+                    
                  ?>
                               
             </table>

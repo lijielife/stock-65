@@ -93,6 +93,18 @@
             if ($row['disponible'] == 0){
                 $row['disponible'] = "AGOTADO";
             }
+            else if ($row['disponible'] >= 20 and $row['disponible'] < 50){
+                $row['disponible'] = "+20";
+            }
+            else if ($row['disponible'] >= 50 and $row['disponible'] < 80){
+                $row['disponible'] = "+50";
+            }
+            else if ($row['disponible'] >= 80 and $row['disponible'] < 100){
+                $row['disponible'] = "+80";
+            }
+            else if ($row['disponible'] >= 100){
+                $row['disponible'] = "+100";
+            }
             if ($count == 0){
                 $count = 1;
                 if ($count2 == 0){
@@ -122,9 +134,9 @@
                                     <div target="_parent" style="color:black; font-size: 20px;">'.strtoupper($row['marca']).' <STRONG style="color: black;">'.strtoupper($row['nombre']).'</STRONG> <strong class="pull-right hidden-md  "></strong></div></h4>
 
 
-                            <p style="margin-bottom: 20px; margin-top:10px; color: black;">  
+                            <p style="color: black; margin-bottom: 15px; margin-top:10px; padding: 0;">  
                                 '.$row['descripcion'].'
-                            </p class="visible-xs"><span><strong class="pull-right" style="font-size: 20px; color: black;">STOCK: <span style="color:orange;">'.$row['disponible'].'</span></strong></span>
+                            </p class="visible-xs"><span><strong class="pull-right" style="font-size: 20px; color: black;"><span style="font-size:15px">STOCK: </span><span style="color:black;">'.$row['disponible'].'</span></strong></span>
                         </div>
                     </div>
                 </div><!-- End Listing-->
